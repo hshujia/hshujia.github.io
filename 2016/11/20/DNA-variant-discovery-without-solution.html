@@ -92,7 +92,7 @@ OverviewIn this exercise we start from a realigned and recalibrated alignment fi
 <meta property="og:site_name" content="Fungenomics Courses">
 <meta property="og:description" content="Siyang Liu
 OverviewIn this exercise we start from a realigned and recalibrated alignment file of individual NA12878 in BAM format and infer SNPs and INDELs from it.We have two set of bams including th">
-<meta property="og:updated_time" content="2001-01-01T00:13:24.000Z">
+<meta property="og:updated_time" content="2001-01-01T00:20:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNA variant discovery without solution">
 <meta name="twitter:description" content="Siyang Liu
@@ -389,12 +389,12 @@ OverviewIn this exercise we start from a realigned and recalibrated alignment fi
 <h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><p>Create a working directory in your home directory and link the files needed for the exercise in the working directory. </p>
 <p>For utilization of GATK, the first thing is to get to know about the bundle files which includes all the file required by GATK. </p>
 <p>Java:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">source</span> /share/home/teacher1/software/java/8/load.sh</div></pre></td></tr></table></figure></p>
-<p>The two NA12878 BAMs:<br>/share/home/teacher1/20161128_exercise/Alignment/NA12878/NA12878_realign_BQSR4.1p.chr22.bam (high coverage bam)<br>/share/home/teacher1/20161128_exercise/Alignment/NA12878/NA12878_realign_BQSR4.0.1p.chr22.bam (downsampled by proportion 0.1)</p>
+<p>The two NA12878 BAMs:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/share/home/teacher1/20161128_exercise/Alignment/NA12878/NA12878_realign_BQSR4.1p.chr22.bam (high coverage bam)</div><div class="line">/share/home/teacher1/20161128_exercise/Alignment/NA12878/NA12878_realign_BQSR4.0.1p.chr22.bam (downsampled by proportion 0.1)</div></pre></td></tr></table></figure></p>
 <p>The BAI files are the index file for bam to enable the fast query. We need them for samtools and gatk utilities.</p>
-<p>The gatk engine:<br>/share/home/teacher1/software/GenomeAnalysisTK.jar</p>
-<p>The gatk bundle:<br>/share/home/teacher1/database/gatk_bundle/2.8/b37</p>
-<p>Some useful scripts:<br>/share/home/teacher1/bin/</p>
-<p>The precomputed vcf called from NA12878_realign_BQSR4.1p.chr22.bam:<br>/share/home/teacher1/20161128_exercise/VariantCall/NA12878_realign_BQSR4.1p.chr22.raw.vcf</p>
+<p>The gatk engine:<br><code>/share/home/teacher1/software/GenomeAnalysisTK.jar</code></p>
+<p>The gatk bundle:<br><code>/share/home/teacher1/database/gatk_bundle/2.8/b37</code></p>
+<p>Some useful scripts:<br><code>/share/home/teacher1/bin/</code></p>
+<p>The precomputed vcf called from NA12878_realign_BQSR4.1p.chr22.bam:<br><code>/share/home/teacher1/20161128_exercise/VariantCall/NA12878_realign_BQSR4.1p.chr22.raw.vcf</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkdir variant_calling </div><div class="line">$ <span class="built_in">cd</span> variant_calling</div></pre></td></tr></table></figure>
 <h3 id="Some-prior-knowledge"><a href="#Some-prior-knowledge" class="headerlink" title="Some prior knowledge"></a>Some prior knowledge</h3><p>If you find the exercise difficult, it can be due to you lack some of the prior knowledge or skills for it. Don’t hestiate to ask teachers or classmates for help. </p>
 <p>Here is a list of information that you can google find the right material and learn by yourself.</p>
