@@ -94,7 +94,7 @@ OverviewIn this exercise we start from a realigned and recalibrated alignment fi
 OverviewIn this exercise we start from a realigned and recalibrated alignment file of individual NA12878 in BAM format and infer SNPs and INDELs from it.We have two set of bams including th">
 <meta property="og:image" content="http://blog-fungenomics-com.qiniudn.com/NA12878_realign_BQSR4.1p.chr22.depth.png">
 <meta property="og:image" content="http://blog-fungenomics-com.qiniudn.com/NA12878_realign_BQSR4.0.1p.chr22.depth.png">
-<meta property="og:updated_time" content="2001-01-01T00:06:15.000Z">
+<meta property="og:updated_time" content="2001-01-01T00:12:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNA variant discovery">
 <meta name="twitter:description" content="Siyang Liu
@@ -394,9 +394,9 @@ OverviewIn this exercise we start from a realigned and recalibrated alignment fi
 <p>Java:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">source</span> /share/home/teacher1/software/java/8/load.sh</div></pre></td></tr></table></figure></p>
 <p>The two NA12878 BAMs:<br>/share/home/teacher1/20161128_exercise/Alignment/NA12878/NA12878_realign_BQSR4.1p.chr22.bam (high coverage bam)<br>/share/home/teacher1/20161128_exercise/Alignment/NA12878/NA12878_realign_BQSR4.0.1p.chr22.bam (downsampled by proportion 0.1)</p>
 <p>The BAI files are the index file for bam to enable the fast query. We need them for samtools and gatk utilities.</p>
-<p>The gatk engine:<br>/home/share/teacher1/software/GenomeAnalysisTK.jar</p>
-<p>The gatk bundle:<br>/home/share/teacher1/database/gatk_bundle/2.8/b37</p>
-<p>Some useful scripts:<br>/home/share/teacher1/bin/</p>
+<p>The gatk engine:<br>/share/home/teacher1/software/GenomeAnalysisTK.jar</p>
+<p>The gatk bundle:<br>/share/home/teacher1/database/gatk_bundle/2.8/b37</p>
+<p>Some useful scripts:<br>/share/home/teacher1/bin/</p>
 <p>The precomputed vcf called from NA12878_realign_BQSR4.1p.chr22.bam:<br>/share/home/teacher1/20161128_exercise/VariantCall/NA12878_realign_BQSR4.1p.chr22.raw.vcf</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkdir variant_calling </div><div class="line">$ <span class="built_in">cd</span> variant_calling</div></pre></td></tr></table></figure>
 <h3 id="Some-prior-knowledge"><a href="#Some-prior-knowledge" class="headerlink" title="Some prior knowledge"></a>Some prior knowledge</h3><p>If you find the exercise difficult, it can be due to you lack some of the prior knowledge or skills for it. Don’t hestiate to ask teachers or classmates for help. </p>
@@ -436,7 +436,7 @@ OverviewIn this exercise we start from a realigned and recalibrated alignment fi
 <p>This statistics can be estimated from the SAM/BAM/CRAM alignment files using the <code>samtools depth</code> coupled with some scripts.</p>
 <p>Let’s generate two plots respectively for the high coverage and downsampled bam using the following commands (you can also use the bash shell to submit the jobs to the backend using nohup sh $shell &amp;)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#for high coverage bam</span></div><div class="line">$ nohup time samtools depth <span class="_">-a</span> NA12878_realign_BQSR4.1p.chr22.bam &gt;NA12878_realign_BQSR4.1p.chr22.depth &amp;&amp; <span class="built_in">echo</span> samtools depth <span class="keyword">done</span> &amp;</div></pre></td></tr></table></figure>
-<p>Then you can use the following script in the /home/share/teacher1/bin directory to generate the following figures.</p>
+<p>Then you can use the following script in the /share/home/teacher1/bin directory to generate the following figures.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ nohup perl coverage.depth.pl NA12878_realign_BQSR4.1p.chr22.depth 16410021 &gt; NA12878_realign_BQSR4.1p.chr22.depth.dist &amp; <span class="comment">#16410021 is the gap size of chr22.</span></div><div class="line"></div><div class="line">$ Rscript samtools_coveragedepth_stat.r NA12878_realign_BQSR4.1p.chr22.depth.dist NA12878_realign_BQSR4.1p.chr22.depth.dist.pdf</div></pre></td></tr></table></figure>
 <h3 id="Questions-1"><a href="#Questions-1" class="headerlink" title="Questions"></a>Questions</h3><h4 id="1-What-is-the-approximate-average-coverage-depth-for-the-two-data-set-respectively"><a href="#1-What-is-the-approximate-average-coverage-depth-for-the-two-data-set-respectively" class="headerlink" title="1. What is the approximate average coverage depth for the two data set respectively?"></a>1. What is the approximate average coverage depth for the two data set respectively?</h4><blockquote>
 <p>Around 45x and around 4.5x as indicated in the following figure</p>
