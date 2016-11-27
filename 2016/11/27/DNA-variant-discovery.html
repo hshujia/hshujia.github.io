@@ -84,12 +84,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Fungenomics Courses">
-<meta property="og:url" content="http://cs.fungenomics.com/index.html">
+<meta name="description" content="OverviewIn this exercise we start from a realigned and recalibrated bam-file and call SNP and INDELs from it.  We have two set of bams including the full data set from NA12878 (~44x, high-coverage.bam">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNA-variant-discovery">
+<meta property="og:url" content="http://cs.fungenomics.com/2016/11/27/DNA-variant-discovery.html">
 <meta property="og:site_name" content="Fungenomics Courses">
+<meta property="og:description" content="OverviewIn this exercise we start from a realigned and recalibrated bam-file and call SNP and INDELs from it.  We have two set of bams including the full data set from NA12878 (~44x, high-coverage.bam">
+<meta property="og:updated_time" content="2016-11-27T12:13:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Fungenomics Courses">
+<meta name="twitter:title" content="DNA-variant-discovery">
+<meta name="twitter:description" content="OverviewIn this exercise we start from a realigned and recalibrated bam-file and call SNP and INDELs from it.  We have two set of bams including the full data set from NA12878 (~44x, high-coverage.bam">
 
 
 
@@ -117,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://cs.fungenomics.com/"/>
+  <link rel="canonical" href="http://cs.fungenomics.com/2016/11/27/DNA-variant-discovery.html"/>
 
 
 
 
 
-  <title> Fungenomics Courses </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> DNA-variant-discovery | Fungenomics Courses </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -144,9 +148,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -225,9 +227,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -260,10 +262,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/11/27/DNA-variant-discovery.html" itemprop="url">
-                  DNA-variant-discovery
-                </a>
+                DNA-variant-discovery
               
             
           </h1>
@@ -312,9 +311,7 @@
       
 
       
-        
-          
-            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>In this exercise we start from a realigned and recalibrated bam-file and call SNP and INDELs from it.  We have two set of bams including the full data set from NA12878 (<strong>~44x, high-coverage.bam</strong>)) and the downsampled data set from the full data set (<strong>~4x, low-coverage.bam</strong>).  We recall some of the knowledge that we learn from the course and rethink the variant discovery process. </p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>In this exercise we start from a realigned and recalibrated bam-file and call SNP and INDELs from it.  We have two set of bams including the full data set from NA12878 (<strong>~44x, high-coverage.bam</strong>)) and the downsampled data set from the full data set (<strong>~4x, low-coverage.bam</strong>).  We recall some of the knowledge that we learn from the course and rethink the variant discovery process. </p>
 <p>Below is a list of practices we will go through in the exercise. </p>
 <ol>
 <li>Observation of the realigned and recalibrated bam</li>
@@ -417,16 +414,20 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">perl -ane <span class="string">'if ($_ =~ m/^#/) &#123;&#125; else &#123;if ($F[2] eq ".") &#123;print $F[5], "\n"&#125;&#125;'</span> HG00418.snps.recal.pass.vcf &gt; novel.qual.txt perl -ane <span class="string">'if ($_ =~ m/^#/) &#123;&#125; else &#123;if ($F[2] ne ".") &#123;print $F[5], "\n"&#125;&#125;'</span> HG00418.snps.recal.pass.vcf &gt; known.qual.txt  R n = read.table(<span class="string">"novel.qual.txt"</span>) k = read.table(<span class="string">"known.qual.txt"</span>) plot(density(k[,1]), xlim=c(0,500), ylim=c(0,0.01), xlab=<span class="string">"Variant Quality"</span>, main=<span class="string">"Known vs Novel SNPs"</span>) points(density(n[,1]), <span class="built_in">type</span>=<span class="string">"l"</span>, col=<span class="string">"red"</span>) legend(<span class="string">"topright"</span>, legend=c(<span class="string">"known"</span>, <span class="string">"novel"</span>), col=c(<span class="string">"black"</span>, <span class="string">"red"</span>), lty=1) dev.print(<span class="string">"variants.known_vs_novel.pdf"</span>, device=pdf)</div></pre></td></tr></table></figure>
 <h4 id="Q4-Based-on-this-would-you-trust-all-of-the-novel-SNPs"><a href="#Q4-Based-on-this-would-you-trust-all-of-the-novel-SNPs" class="headerlink" title="Q4. Based on this, would you trust all of the novel SNPs?"></a>Q4. Based on this, would you trust all of the novel SNPs?</h4><h4 id="Q5-Why-do-you-think-that-it-looks-like-this-Hint-dbSNP-contains-information-from-different-populations-including-Asians-HG00418-is-Han-Chinese"><a href="#Q5-Why-do-you-think-that-it-looks-like-this-Hint-dbSNP-contains-information-from-different-populations-including-Asians-HG00418-is-Han-Chinese" class="headerlink" title="Q5. Why do you think that it looks like this? Hint: dbSNP contains information from different populations, including Asians (HG00418 is Han Chinese)."></a>Q5. Why do you think that it looks like this? Hint: dbSNP contains information from different populations, including Asians (HG00418 is Han Chinese).</h4><p>We could remove all novel SNPs with lower quality than eg 70 (this would be to apply hard-filtering).<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">perl -ane <span class="string">'if ($_ =~ m/^#/) &#123;print $_&#125; else &#123;if ($F[2] eq "." and $F[5] &lt; 70) &#123;&#125; else &#123;print $_&#125;&#125;'</span> \ HG00418.snps.recal.pass.vcf &gt; HG00418.snps.recal.pass.novel_filt.vcf grep -v <span class="string">"#"</span> -c HG00418.snps.recal.pass.novel_filt.vcf</div></pre></td></tr></table></figure></p>
 <h4 id="Q6-How-many-SNPs-do-we-then-have-and-how-many-novel-did-we-remove-hint-Q3-current-number"><a href="#Q6-How-many-SNPs-do-we-then-have-and-how-many-novel-did-we-remove-hint-Q3-current-number" class="headerlink" title="Q6. How many SNPs do we then have and how many novel did we remove (hint: Q3-current number)"></a>Q6. How many SNPs do we then have and how many novel did we remove (hint: Q3-current number)</h4>
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
@@ -435,144 +436,34 @@
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://cs.fungenomics.com/2016/11/27/hello-world.html">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Siyang Liu">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Fungenomics Courses">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Fungenomics Courses" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/11/27/hello-world.html" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/11/27/hello-world.html" itemprop="url">
-                  Hello World
-                </a>
-              
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-27T14:49:02+08:00">
-                2016-11-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -580,6 +471,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -599,8 +494,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -639,6 +543,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NA12878"><span class="nav-number">2.</span> <span class="nav-text">NA12878</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preparation"><span class="nav-number">3.</span> <span class="nav-text">Preparation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Some-prior-knowledge"><span class="nav-number">3.1.</span> <span class="nav-text">Some prior knowledge</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-realigned-and-BQSR-tags-information-in-the-bam"><span class="nav-number">4.</span> <span class="nav-text">The realigned and BQSR tags information in the bam</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions"><span class="nav-number">4.1.</span> <span class="nav-text">Questions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-coverage-and-the-sequencing-depth-information-from-the-bam"><span class="nav-number">5.</span> <span class="nav-text">The coverage and the sequencing depth information from the bam</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions-1"><span class="nav-number">5.1.</span> <span class="nav-text">Questions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-What-is-the-approximate-average-coverage-depth-for-the-two-data-set-respectively"><span class="nav-number">5.1.1.</span> <span class="nav-text">1. What is the approximate average coverage depth for the two data set respectively?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-much-is-the-genome-covered-by-more-than-1-read-and-4-read"><span class="nav-number">5.1.2.</span> <span class="nav-text">2. How much is the genome covered by more than 1 read and 4 read.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Did-you-notice-the-parameters-q-and-–Q-in-the-samtools-depth-and-what-do-they-mean"><span class="nav-number">5.1.3.</span> <span class="nav-text">3. Did you notice the parameters -q and –Q in the samtools depth and what do they mean?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-HaplotypeCaller-GATK"><span class="nav-number">6.</span> <span class="nav-text">The HaplotypeCaller (GATK)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Question"><span class="nav-number">6.1.</span> <span class="nav-text">Question:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-What-do-the-parameters-mean-in-the-above-command-line"><span class="nav-number">6.1.1.</span> <span class="nav-text">1. What do the parameters mean in the above command line?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Can-you-distinguish-the-structure-of-a-vcf-file"><span class="nav-number">6.1.2.</span> <span class="nav-text">2. Can you distinguish the structure of a vcf file?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-How-many-known-SNPs-and-INDELs-did-we-get-and-how-many-of-them-are-novel"><span class="nav-number">6.1.3.</span> <span class="nav-text">3. How many known SNPs and INDELs did we get and how many of them are novel?</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Heterozygotes-vs-Homozygotes-optional"><span class="nav-number">6.2.</span> <span class="nav-text">Heterozygotes vs Homozygotes (optional)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Variant-Quality-Score-Recalibration-Soft-filtering"><span class="nav-number">7.</span> <span class="nav-text">Variant Quality Score Recalibration / Soft filtering</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions-2"><span class="nav-number">7.1.</span> <span class="nav-text">Questions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Q1-Did-you-see-some-errors-emitting-in-the-recalibration-process-Why-is-it"><span class="nav-number">7.1.1.</span> <span class="nav-text">Q1. Did you see some errors emitting in the recalibration process?  Why is it?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Q2-less-–S-the-tranche-file-or-open-the-tranche-plot-by-rsync-the-file-to-your-local-disk-what-does-tranche-mean-Does-the-result-make-sense-to-you"><span class="nav-number">7.1.2.</span> <span class="nav-text">Q2. less –S the *tranche file (or open the tranche plot by rsync the file to your local disk), what does tranche mean? Does the result make sense to you?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Q3-What-do-you-think-you-can-do-provided-such-a-result"><span class="nav-number">7.1.3.</span> <span class="nav-text">Q3. What do you think you can do provided such a result?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apply-recalibration-to-SNPs"><span class="nav-number">8.</span> <span class="nav-text">Apply recalibration to SNPs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Recalibration-to-SNPs"><span class="nav-number">9.</span> <span class="nav-text">Recalibration to SNPs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions-3"><span class="nav-number">9.1.</span> <span class="nav-text">Questions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Q1-How-many-known-do-we-have-that-PASS-the-filtering"><span class="nav-number">9.1.1.</span> <span class="nav-text">Q1. How many known  do we have that PASS the filtering?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Q4-Based-on-this-would-you-trust-all-of-the-novel-SNPs"><span class="nav-number">9.1.2.</span> <span class="nav-text">Q4. Based on this, would you trust all of the novel SNPs?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Q5-Why-do-you-think-that-it-looks-like-this-Hint-dbSNP-contains-information-from-different-populations-including-Asians-HG00418-is-Han-Chinese"><span class="nav-number">9.1.3.</span> <span class="nav-text">Q5. Why do you think that it looks like this? Hint: dbSNP contains information from different populations, including Asians (HG00418 is Han Chinese).</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Q6-How-many-SNPs-do-we-then-have-and-how-many-novel-did-we-remove-hint-Q3-current-number"><span class="nav-number">9.1.4.</span> <span class="nav-text">Q6. How many SNPs do we then have and how many novel did we remove (hint: Q3-current number)</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
@@ -737,11 +657,32 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -763,43 +704,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
   
 
 
