@@ -1,0 +1,1080 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DNA variant detection," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="OverviewIn this exercise we start from a realigned and recalibrated alignment file of individual NA12878 in BAM format and infer SNPs and INDELs from it.We have two set of bams including the full Hise">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNA variant discovery">
+<meta property="og:url" content="http://cs.fungenomics.com/2016/11/20/DNA-variant-discovery.html">
+<meta property="og:site_name" content="Fungenomics Courses">
+<meta property="og:description" content="OverviewIn this exercise we start from a realigned and recalibrated alignment file of individual NA12878 in BAM format and infer SNPs and INDELs from it.We have two set of bams including the full Hise">
+<meta property="og:image" content="http://blog-fungenomics-com.qiniudn.com/NA12878_realign_BQSR4.1p.chr22.depth.png">
+<meta property="og:image" content="http://blog-fungenomics-com.qiniudn.com/NA12878_realign_BQSR4.0.1p.chr22.depth.png">
+<meta property="og:updated_time" content="2016-11-27T16:28:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DNA variant discovery">
+<meta name="twitter:description" content="OverviewIn this exercise we start from a realigned and recalibrated alignment file of individual NA12878 in BAM format and infer SNPs and INDELs from it.We have two set of bams including the full Hise">
+<meta name="twitter:image" content="http://blog-fungenomics-com.qiniudn.com/NA12878_realign_BQSR4.1p.chr22.depth.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://cs.fungenomics.com/2016/11/20/DNA-variant-discovery.html"/>
+
+
+
+
+
+  <title> DNA variant discovery | Fungenomics Courses </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Fungenomics Courses</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://cs.fungenomics.com/2016/11/20/DNA-variant-discovery.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Siyang Liu">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Fungenomics Courses">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Fungenomics Courses" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                DNA variant discovery
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-20T00:00:00+08:00">
+                2016-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Bioinformatics/" itemprop="url" rel="index">
+                    <span itemprop="name">Bioinformatics</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/11/20/DNA-variant-discovery.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/20/DNA-variant-discovery.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/20/DNA-variant-discovery.html" class="leancloud_visitors" data-flag-title="DNA variant discovery">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">Visitors </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>In this exercise we start from a realigned and recalibrated alignment file of individual NA12878 in BAM format and infer SNPs and INDELs from it.<br>We have two set of bams including the full Hiseq2000 sequencing alignment data set for NA12878 (<strong>~45x, high-coverage.bam</strong>) and the downsampled one from the high-coverage.bam (<strong>~4.5x, low-coverage.bam</strong>).  We recall some of the knowledge that we learn from the course and rethink the variant discovery process. </p>
+<p>Below is a list of practices we will go through in the exercise. </p>
+<ol>
+<li>Observation of the realigned and recalibrated bam</li>
+<li>Coverage depth of an alignment file</li>
+<li>Calling SNPs and INDELs using GATK HaplotypeCaller for high-coverage and low-coverage data set</li>
+<li>Soft filtering (Variant recalibration) of SNPs and Indels </li>
+</ol>
+<h2 id="NA12878-and-the-pre-processing-of-the-data"><a href="#NA12878-and-the-pre-processing-of-the-data" class="headerlink" title="NA12878 and the pre-processing of the data"></a>NA12878 and the pre-processing of the data</h2><p>The sample that we use is called NA12878 with european ancestry. It is probably the sample in the world that has most of the genome sequencing data with cell-line DNA available upon purchase.  Those characteristics makes it a popular validation resource for variant calling. </p>
+<p>The GenomeInABottle consortium <a href="http://jimb.stanford.edu/giab/" target="_blank" rel="external">GIAB</a> has sequenced the NA12878 to 45x coverage using Illumina platform and even more in the future. The sequencing data that we are working on are downloaded from <a href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR194/ERR194147/ERR194147_1.fastq.gz" target="_blank" rel="external">NA12878_1.fastq.gz</a> and <a href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR194/ERR194147/ERR194147_2.fastq.gz" target="_blank" rel="external">NA12878_2.fastq.gz</a>.</p>
+<p>Considering the limited time and the storage and computation resource that we have for the course and to allow you to have more concentrations on the variant calling procedure, I did the pre-processing step that we learnt about the GATK workflow in advance. Recall that the pre-processing includes removing low-quality reads using SoapNuke, aligning of the NA12878 reads using bwa mem, sorting the alignment using samtools sort, removing the potential PCR duplication using samtools rmdup, realigning around the potential INDEL region and recalibrating the base quality score using GATK. </p>
+<p>Finally, I downsampled the bam files from <em>45x</em> to <em>4.5x</em> coverage and restrict the exercise on variant calling on chromosome 22.  The total size of the analysis ready full bam (NA12878_realign_BQSR4.1p.chr22.bam) and the downsampled bam (NA12878_realign_BQSR4.0.1p.chr22.bam) are 7.0G and 708M respectively. </p>
+<p>A few notes:<br>In general, the analysis of the full dataset like this scale in a typical server with 32G memory and 12 cores requires at least 3 days but it can be accelearted using different strategy utlizing a MapReduce cluster achitecture or GPU/FPGA hardwares.  </p>
+<p>We are using BAM format instead of the CRAM format this time since you are required to view the alignment using IGV which so far haven’t been upgraded to accept CRAM. However, note that CRAM will probably be replacing BAM in the near future and therefore, it is good to get familiar with CRAM by yourself. It’s simple by including the reference for all the samtools or GATK command.</p>
+<h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><p>Create a working directory in your home directory and link the files needed for the exercise in the working directory. </p>
+<p>For utilization of GATK, the first thing is to get to know about the bundle files which includes all the file required by GATK. </p>
+<p>The BAMs:<br>/home/share/teacher1/NA12878/BAM/<br>The BAI files are the index file for bam to enable the fast query. We need them for samtools and gatk utilities.</p>
+<p>The gatk engine:<br>/home/share/teacher1/software/GATK</p>
+<p>The gatk bundle:<br>/home/share/teacher1/database/gatk_bundle</p>
+<p>Some useful scripts:<br>/home/share/teacher1/bin</p>
+<p>The precomputed vcf called from NA12878_realign_BQSR4.1p.chr22.bam</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir variant_calling </div><div class="line"><span class="built_in">cd</span> variant_calling</div></pre></td></tr></table></figure>
+<h3 id="Some-prior-knowledge"><a href="#Some-prior-knowledge" class="headerlink" title="Some prior knowledge"></a>Some prior knowledge</h3><p>If you find the exercise difficult, it can be due to you lack some of the prior knowledge or skills for it. Don’t hestiate to ask teachers or classmates for help. </p>
+<p>Here is a list of information that you can google find the right material and learn by yourself.</p>
+<ol>
+<li>linux basic command like <code>mkdir</code>, <code>cd</code>, <code>ln</code>, <code>rsync</code>, <code>nohup &amp;</code></li>
+<li>bash shell</li>
+<li>perl and R script</li>
+</ol>
+<h2 id="View-the-analysis-ready-bam"><a href="#View-the-analysis-ready-bam" class="headerlink" title="View the analysis ready bam"></a>View the analysis ready bam</h2><p>In the course, we have studied the INDEL realignment and base quality recalibration (BQSR) processes in the variant calling framework. </p>
+<p>Let’s look into the difference between the original and the realigned and recalibrated bams. This requires a technique to view the SAM/BAM/CRAM alignment file using samtools view. You can quickly extract all the reads overlapping a the position by using command<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">samtools view <span class="variable">$bam</span> chr:startposition-endposition</div></pre></td></tr></table></figure></p>
+<p>NB: For cram file, you should add <code>–T reference_file</code>. </p>
+<h3 id="Questions"><a href="#Questions" class="headerlink" title="Questions"></a>Questions</h3><ol>
+<li>What are the difference for read “ERR194147.706568380” in position 22:16050152-16050152 between the original bam and the realigned and reclibrated bam?<br>Tips:<br>The read in the original bam is pasted below:<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">samtools view NA12878_rmdup.bam 22:16050152-16050152|tail -1</div><div class="line">ERR194147.706568380 163 22  16050152    40  101M    =   16050372    321 TATTGATCTTTTGTGACATGCACGTGGGTTCCCAGTAGCAAGAAACTAAAGGGTCGCAGGCCGGTTTCTGCTAATTTCTTTAATTCCAAGACAGTCTCAAA   CCCFFFFFHHHHHJJJJJJJJJJJHJJJGHIJJJIHHJJJJJJJJJIGIIFHIEGIHIJHHHFDCDDDDDDDDDDEEDEDDDCDEDDEDDDDDDDDDDDDC   NM:i:0  MD:Z:101    AS:i:101    XS:i:101    XA:Z:14,-19792749,101M,0;   RG:Z:HiseqEAAAGAAA-98</div><div class="line">samtools view NA12878_realign_BQSR4.down.bam 22:16050152-16050152</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>You can use <code>samtools view</code> command to check the alignment record of this read in the realigned and recalibrated bam.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">samtools view NA12878_realign_BQSR4.1p.chr22.bam 22:16050152-16050152</div></pre></td></tr></table></figure></p>
+<blockquote>
+<ol>
+<li>The base quality column changes; There is a BD and BI tag added to the read representing the probability of deletion and insertion errors.  <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">samtools view NA12878_rmdup.bam 22:16050152-16050152|tail -1</div><div class="line">ERR194147.706568380 163 22  16050152    40  101M    =   16050372    321 TATTGATCTTTTGTGACATGCACGTGGGTTCCCAGTAGCAAGAAACTAAAGGGTCGCAGGCCGGTTTCTGCTAATTTCTTTAATTCCAAGACAGTCTCAAA   CCCFFFFFHHHHHJJJJJJJJJJJHJJJGHIJJJIHHJJJJJJJJJIGIIFHIEGIHIJHHHFDCDDDDDDDDDDEEDEDDDCDEDDEDDDDDDDDDDDDC   NM:i:0  MD:Z:101    AS:i:101    XS:i:101    XA:Z:14,-19792749,101M,0;   RG:Z:HiseqEAAAGAAA-98</div><div class="line">samtools view NA12878_realign_BQSR4.down.bam 22:16050152-16050152</div><div class="line">ERR194147.706568380 163 22  16050152    40  101M    =   16050372    321 TATTGATCTTTTGTGACATGCACGTGGGTTCCCAGTAGCAAGAAACTAAAGGGTCGCAGGCCGGTTTCTGCTAATTTCTTTAATTCCAAGACAGTCTCAAA   @?&lt;@ABBAB@@?A@??&gt;?????&gt;:?@?&gt;@?@???A?@A@@?A@???AA@ABAA?A;AAAAAA&lt;AAAABCCBDCBCCCCDBBCCDCDEECEDCEECDDA??A   XA:Z:14,-19792749,101M,0;   MC:Z:101M   BD:Z:JJIKPQPOMLEEMJIMMIMMNNIKLIMJMKKLJMONMNONKKJJBJLLJBKMILLKLMNMMMJJLJCJJMMNMKKKDKKKDKKKKKLNLMLNKQPPNKMKC  MD:Z:101    RG:Z:HiseqEAAAGAAA-98   BI:Z:MMMMRRQPONGGPMLPOLNNOPKNNKMKPLLKKNPNOPQPLNMLFNOOLFNOKPPKNPPOPOLMQMGMNQPRPMNMGMNMHPNONNMQOQPROTRURMOMG  NM:i:0  MQ:i:51 AS:i:101    XS:i:101</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<ol>
+<li>what does the second column in the bam file mean?<blockquote>
+<p>Tip: you can check the meaning via <a href="https://broadinstitute.github.io/picard/explain-flags.html" target="_blank" rel="external">here</a></p>
+</blockquote>
+</li>
+</ol>
+<ol>
+<li>If you are not in a hurry, ask yourself or discuss with the surroundings what the rest of the columns and some of the tags mean? (Cigar field)<blockquote>
+<p>You can find most of the samtools specification information via this link: <a href="https://samtools.github.io/hts-specs/SAMv1.pdf" target="_blank" rel="external">SAMv1</a></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="The-coverage-depth-information-from-the-bam"><a href="#The-coverage-depth-information-from-the-bam" class="headerlink" title="The coverage depth information from the bam"></a>The coverage depth information from the bam</h2><p>Sequencing coverage and depth are important parameters deciding on the quality of the variants for your sample and the DNA variant analysis strategy. Whenever we are exposed to a SAM/BAM/CRAM alignment file, we should ask ourselves what the coverage depth distribution is. </p>
+<p>This statistics can be estimated from the SAM/BAM/CRAM alignment files using the <code>samtools depth</code> coupled with some scripts.</p>
+<p>Let’s generate two plots respectively for the high coverage and downsampled bam using the following commands (you can also use the bash shell to submit the jobs to the backend using nohup sh $shell &amp;)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#for high coverage bam</span></div><div class="line">$ nohup time samtools depth <span class="_">-a</span> NA12878_realign_BQSR4.1p.chr22.bam &gt;NA12878_realign_BQSR4.1p.chr22.depth &amp;&amp; <span class="built_in">echo</span> samtools depth <span class="keyword">done</span> &amp;</div></pre></td></tr></table></figure>
+<p>Then you can use the following script in the /home/share/teacher1/bin directory to generate the following figures.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ nohup perl coverage.depth.pl NA12878_realign_BQSR4.1p.chr22.depth 16410021 &gt; NA12878_realign_BQSR4.1p.chr22.depth.dist &amp; <span class="comment">#16410021 is the gap size of chr22.</span></div><div class="line"></div><div class="line">$ Rscript samtools_depth_stat.R NA12878_realign_BQSR4.1p.chr22.depth.dist NA12878_realign_BQSR4.1p.chr22.depth.dist.pdf</div></pre></td></tr></table></figure>
+<h3 id="Questions-1"><a href="#Questions-1" class="headerlink" title="Questions"></a>Questions</h3><h4 id="1-What-is-the-approximate-average-coverage-depth-for-the-two-data-set-respectively"><a href="#1-What-is-the-approximate-average-coverage-depth-for-the-two-data-set-respectively" class="headerlink" title="1. What is the approximate average coverage depth for the two data set respectively?"></a>1. What is the approximate average coverage depth for the two data set respectively?</h4><blockquote>
+<p>Around 45x and around 4.5x as indicated in the following figure</p>
+</blockquote>
+<p>Figure1. coverage depth and accumulative coverage depth for high coverage BAM<br><img src="http://blog-fungenomics-com.qiniudn.com/NA12878_realign_BQSR4.1p.chr22.depth.png" alt="Figure1"></p>
+<p>Figure2. coverage depth and accumulative coverage depth for downsampled BAM<br><img src="http://blog-fungenomics-com.qiniudn.com/NA12878_realign_BQSR4.0.1p.chr22.depth.png" alt="Figure2"></p>
+<h4 id="2-How-much-is-the-genome-excluding-N-covered-by-more-than-1-read-and-4-read"><a href="#2-How-much-is-the-genome-excluding-N-covered-by-more-than-1-read-and-4-read" class="headerlink" title="2. How much is the genome (excluding N) covered by more than 1 read and 4 read."></a>2. How much is the genome (excluding N) covered by more than 1 read and 4 read.</h4><blockquote>
+<p>99% by the high coverage bam and 90% by the downsampled bam</p>
+<h4 id="3-Did-you-notice-the-parameters-q-and-–Q-in-the-samtools-depth-and-what-do-they-mean"><a href="#3-Did-you-notice-the-parameters-q-and-–Q-in-the-samtools-depth-and-what-do-they-mean" class="headerlink" title="3. Did you notice the parameters -q and –Q in the samtools depth and what do they mean?"></a>3. Did you notice the parameters -q and –Q in the samtools depth and what do they mean?</h4><p>  By applying –q and –Q, we can get the effective coverage and depth for variant calling. By effective, we mean only the high quality bases in a read with high mapping quality that will be taken into account for variant discovery. By default, the base quality threshold is 10 in the GATK haplotypecaller.  </p>
+</blockquote>
+<h2 id="Calling-SNP-and-INDELs-using-the-GATK-haplotypecaller"><a href="#Calling-SNP-and-INDELs-using-the-GATK-haplotypecaller" class="headerlink" title="Calling SNP and INDELs using the GATK haplotypecaller"></a>Calling SNP and INDELs using the GATK haplotypecaller</h2><p>There are several state-of-the-art variant detectors which calls SNPs and small INDELs from next generation sequencing data. You can find most of them via <a href="https://omictools.com/" target="_blank" rel="external">omictools</a>.<br>HaplotypeCaller is one of the most widely sophiscated approach developed by the GATK team in Broad institute where we have gone through the algorithms in the course. </p>
+<p>Now, let’s give it a try by applying the HaplotypeCaller to call variants from our bams and learn about a few metrics in the vcf file. </p>
+<p>The haplotypecaller for the full high coverage bam NA12878_realign_BQSR4.1p.chr22.bam takes around 92 minutes and therefore, I precomputed this for you. </p>
+<p>It’s your turn to carry out the haplotypecaller analysis of the low-coverage bam – it will take around 15 minutes in the training server.  During this process, you can have a look at the vcf <code>NA12878_realign_BQSR4.1p.chr22.raw.vcf</code> (using <code>less -S</code>) for the high coverage data and answer the first two questions. </p>
+<p>NB: I don’t use absolute path before the files used in the following command. You can either <code>ln -s</code> the necessary files to your current directory or you place the absolute path in </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">ref=human_g1k_v37.fasta</div><div class="line">downbam=NA12878_realign_BQSR4.0.1p.bam</div><div class="line">dbsnp=dbsnp_138.b37.vcf</div><div class="line">outdir=\`<span class="built_in">pwd</span>\`</div><div class="line">out=NA12878_realign_BQSR4.0.1p.chr22.raw.vcf</div><div class="line">shname=NA12878_realign_BQSR4.0.1p.chr22.raw.hc.sh</div><div class="line"></div><div class="line"><span class="built_in">echo</span> \<span class="string">"time java -Xmx15g -jar GenomeAnalysisTK.jar \</span></div><div class="line">-T HaplotypeCaller \</div><div class="line">-R <span class="variable">$ref</span> \</div><div class="line">-I <span class="variable">$downbam</span> \</div><div class="line">-D <span class="variable">$dbsnp</span> \</div><div class="line">-L 22 \</div><div class="line">-o <span class="variable">$outdir</span>/<span class="variable">$out</span> \</div><div class="line">-stand_call_conf 30 \</div><div class="line">--stand_emit_conf 10\</div><div class="line"> -A QualByDepth -A RMSMappingQuality -A MappingQualityRankSumTest -A ReadPosRankSumTest -A FisherStrand -A StrandOddsRatio -A Coverage\" &gt; <span class="variable">$shname</span></div><div class="line">nohup sh <span class="variable">$shname</span> &amp;</div></pre></td></tr></table></figure>
+<h3 id="Question"><a href="#Question" class="headerlink" title="Question:"></a>Question:</h3><h4 id="1-What-do-the-parameters-mean-in-the-above-command-line"><a href="#1-What-do-the-parameters-mean-in-the-above-command-line" class="headerlink" title="1. What do the parameters mean in the above command line?"></a>1. What do the parameters mean in the above command line?</h4><blockquote>
+<p>  The “–D” (an abbreviation for the “–dbsnp”) parameter annotates the variants with known variants in the human dbSNP database.<br>  The “–L” parameter restricts our analysis in chr22.<br>  The “-stand_call_conf” which is minimum Phred quality value of SNP to pass filtering, and “-stand_emit_conf” which is the minimum Phred quality value of the SNP to be reported at all.<br>  We have annotated several metrics which is useful for the filtration purpose using “-A”<br>  The full list of the annotation metrics can be found in the “Annotation Modules” Categories in the GATK Documentation. For example the FisherStrand annotation detects whether the alternative allele and the reference allele over/under-present in specific strand <a href="https://software.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_annotator_AS_FisherStrand.php" target="_blank" rel="external">(strand bias)</a>.<br>  Remember that we can have HaplotypeCaller to output all sites in gVCF format if we add the command: <code>-emitRefConfidence GVCF --variant_index_type LINEAR --variant_index_parameter 128000</code>. It is the best practice when we are working on multiple samples when we can perform the genotype calling for single individual and then carry out a joint calling using the individual gvcf.  </p>
+</blockquote>
+<h4 id="2-Can-you-distinguish-the-structure-of-a-vcf-file"><a href="#2-Can-you-distinguish-the-structure-of-a-vcf-file" class="headerlink" title="2. Can you distinguish the structure of a vcf file?"></a>2. Can you distinguish the structure of a vcf file?</h4><blockquote>
+<p>  You should be able to tell the two main sections including the header section denoted by “#” as the first character and actual variant call section.<br>The header gives you information about all the abbreviations in the file and is quite handy.<br>  In the variant call part, you should be able to tell what each of the columns as follows:<br>Chromosome, Position, dbSNP id, Reference base, Alternative base, Phred quality of call, Filter status, Lots of info, Format of the next field and then genotype information for our sample NA12878. </p>
+</blockquote>
+<p>####3. When you finished the your haplotypecaller analsyis, think about what the difference are between the low-coverage variant call set that you have computed and the high-coverage variant call set that I precomputed?<br>Think about</p>
+<ul>
+<li>How many SNP and INDEL calls did we get respectively?</li>
+<li>How many passed the quality score (&gt;30 Qual)?</li>
+</ul>
+<h4 id="3-How-many-known-SNPs-and-INDELs-did-we-get-and-how-many-of-them-are-novel"><a href="#3-How-many-known-SNPs-and-INDELs-did-we-get-and-how-many-of-them-are-novel" class="headerlink" title="3. How many known SNPs and INDELs did we get and how many of them are novel?"></a>3. How many known SNPs and INDELs did we get and how many of them are novel?</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">less NA12878_realign_BQSR4.0.1p.chr22.raw.vcf|perl <span class="_">-e</span> <span class="string">'while(&lt;&gt;)&#123;chomp;if($_=~/^#/)&#123;next;&#125; @tmp=split;if($tmp[2] eq ".")&#123;$hash&#123;'</span>novel<span class="string">'&#125;++;&#125;else&#123;$hash&#123;'</span>known<span class="string">'&#125;++;&#125;&#125;foreach $k(keys %hash)&#123;print "$k\t$hash&#123;$k&#125;\n";&#125;'</span></div><div class="line">known   37201</div><div class="line">novel   1133</div></pre></td></tr></table></figure>
+<h2 id="Variant-Quality-Score-Recalibration-Soft-filtering"><a href="#Variant-Quality-Score-Recalibration-Soft-filtering" class="headerlink" title="Variant Quality Score Recalibration / Soft filtering"></a>Variant Quality Score Recalibration / Soft filtering</h2><p>Now we come to the most exciting part where we will apply Gaussian mixture models on a few of the annotation and distinguish the false positive calls from the real ones. This process is called VQSR (variant quality score recalibration) and is one of the novel methods introduced by GATK in the field different from hard filtering that we normally adopted before 2008.  </p>
+<p>The recalibration requires training sites and true sites. From the commands below, we can see that the hapmap will be used as the true sites with the highest Phred-scaled prior while the Omni and the 1000 genome high confident SNP as the training sites with mediate prior. Finally ,the dbSNP will not be included in the training but used for visualization purpose to evaluation of how many variants will be known or novel in the tranche plot. </p>
+<p>Since the model relies on features on known variants and we know that features for SNP and INDEL are different, it is easy to understand why we will run the “VariantRecalibrator” for SNP and INDEL, respectively. </p>
+<p>First, you run the VariantRecalibrator Engine with a SNP mode for the downsampled vcf. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">rawvcf=NA12878_realign_BQSR4.0.1p.chr22.raw.vcf</div><div class="line"></div><div class="line">hapmap=hapmap_3.3.b37.vcf</div><div class="line">omni=1000G_omni2.5.b37.vcf</div><div class="line">highconfi=1000G_phase1.snps.high_confidence.b37.vcf</div><div class="line">dbsnp=dbsnp_138.b37.vcf</div><div class="line">outdir=\`<span class="built_in">pwd</span>\`</div><div class="line">outname=\`basename <span class="variable">$rawvcf</span>|sed <span class="_">-e</span> <span class="string">'s/\.raw\.vcf//'</span>\`</div><div class="line">tag=<span class="variable">$outname</span>.snprecal</div><div class="line"><span class="built_in">echo</span> <span class="string">"time java -Xmx15g -jar <span class="variable">$gatk</span> -T VariantRecalibrator\</span></div><div class="line"> -R <span class="variable">$ref</span>\</div><div class="line"> -L 22\</div><div class="line"> -input <span class="variable">$rawvcf</span>\</div><div class="line"> -resource:hapmap,known=false,training=true,truth=true,prior=15.0 <span class="variable">$hapmap</span>\</div><div class="line"> -resource:omini,known=false,training=true,truth=true,prior=12.0 <span class="variable">$omni</span>\</div><div class="line"> -resource:1000G,known=false,training=true,truth=false,prior=10.0 <span class="variable">$highconfi</span> \</div><div class="line"> -resource:dbsnp,known=true,training=false,truth=false,prior=6.0 <span class="variable">$dbsnp</span>\</div><div class="line"> -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -an DP\</div><div class="line"> --maxGaussians 4\ #Since we have only variants on chr22, we don’t need the default 8 clusters. </div><div class="line"> -mode SNP\</div><div class="line"> -recalFile <span class="variable">$outdir</span>/<span class="variable">$outname</span>.snps.recal\</div><div class="line"> -tranchesFile <span class="variable">$outdir</span>/<span class="variable">$outname</span>.snps.tranches\</div><div class="line"> -rscriptFile <span class="variable">$outdir</span>/<span class="variable">$outname</span>.snps.plots.R\</div><div class="line"> &amp;&amp; echo \"VariantRecalibrator done\" " &gt;<span class="variable">$tag</span>.sh</div><div class="line"> nohup sh <span class="variable">$tag</span>.sh &amp;</div></pre></td></tr></table></figure>
+<h3 id="Questions-2"><a href="#Questions-2" class="headerlink" title="Questions"></a>Questions</h3><h4 id="1-Did-you-see-some-errors-emitting-in-the-recalibration-process-Why-is-it"><a href="#1-Did-you-see-some-errors-emitting-in-the-recalibration-process-Why-is-it" class="headerlink" title="1. Did you see some errors emitting in the recalibration process?  Why is it?"></a>1. Did you see some errors emitting in the recalibration process?  Why is it?</h4><p>The reason for the errors is because no variants with LOD scores less than -5.0 were found. It’s also important to know that while the previous analysis like indel realignment, base quality score recalibration, haplotypecaller can all be processed by chromosomes or by specific regions. </p>
+<p>However, it’s recommended to apply the VariantRecalibrator on whole genome scale variants so as to have enough data for the training model. </p>
+<p>Hint: If you feel interested, you can lower down the <code>-stand_call_conf</code> and <code>-stand_emit_conf</code> in the haplotypecaller process so that you can have more variants and some of those variants will display LOD score less than &lt;=-0.5 or you can lower down the LOD score. </p>
+<p>This doesn’t matter too much and the point is that you understand enough data is required for the recalibration model. Otherwise, we won’t have correct result. </p>
+<p>Now, let’s run the VariantRecalibration for the high coverage chr22 alignment bam from NA12878 by replacing the –input arguments in the above command line. This time, you should be able to go through it in around 1 min. When you finish, have a look at the output file. </p>
+<h4 id="2-less-–S-the-tranche-file-or-open-the-tranche-plot-by-rsync-the-file-to-your-local-disk-what-does-tranche-mean-Does-the-result-make-sense-to-you"><a href="#2-less-–S-the-tranche-file-or-open-the-tranche-plot-by-rsync-the-file-to-your-local-disk-what-does-tranche-mean-Does-the-result-make-sense-to-you" class="headerlink" title="2. less –S the *tranche file (or open the tranche plot by rsync the file to your local disk), what does tranche mean? Does the result make sense to you?"></a>2. less –S the *tranche file (or open the tranche plot by rsync the file to your local disk), what does tranche mean? Does the result make sense to you?</h4><p>The <code>truth</code> number defines the trances, so that <code>90</code> means that we accept all variants until we reach <strong>90%</strong> of our truth set, <code>99</code> means that we accept all variants until we have reached 99% of our truth set and so on. Blue are predicted to be true SNPs and orange to be false SNPs. We use this plot to decide where to put the threshold for filtering, eg. how many more false SNPs are you likely to get by increasing from <strong>99.0</strong> to <strong>99.9</strong>.</p>
+<p>That the <code>Ti/Tv</code> ratio for known variants is greater than the expected range (2.0 – 2.1) suggests excessive conservertivity of the calls while the lower <code>Ti/Tv</code> ratio for the novel variants may suggest false positives. </p>
+<p>This result may be limited because we are not using the best practice to train the model with all the variants within the genome. </p>
+<h4 id="3-What-do-you-think-you-can-do-provided-such-a-result"><a href="#3-What-do-you-think-you-can-do-provided-such-a-result" class="headerlink" title="3. What do you think you can do provided such a result?"></a>3. What do you think you can do provided such a result?</h4><p>We can do the recalibration again for the whole genome-scale variants.<br>Which I have done but the result is still not correct. This may suggests some problems with the pipelines which is difficult to find out. </p>
+<blockquote>
+<p>The NA12878_realign_BQSR4.1p.chr22.snps.plots.R in the output direction is supposed to be generate the 2 dimensional projection of the Guassian mixture distribution over a pair of the annotation metrics used in the recalibration process. However, it contains some bug and you cannot just run it by Rscript NA12878_realign_BQSR4.1p.chr22.snps.plots.R.  If you want to see it you can download it from here. </p>
+</blockquote>
+<h2 id="Apply-recalibration-to-SNPs"><a href="#Apply-recalibration-to-SNPs" class="headerlink" title="Apply recalibration to SNPs"></a>Apply recalibration to SNPs</h2><p>Lets apply the recalibration to our SNP calls. Lets try with a threshold of 99.9</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">ref=ref=human_g1k_v37.fasta</div><div class="line">rawvcf=rawvcf=NA12878_realign_BQSR4.0.1p.chr22.raw.vcf</div><div class="line">outdir=`<span class="built_in">pwd</span>`</div><div class="line">outname=`basename <span class="variable">$rawvcf</span>|sed <span class="_">-e</span> <span class="string">'s/\.raw\.vcf//'</span>`</div><div class="line">tag=<span class="variable">$outname</span>.AR</div><div class="line"><span class="built_in">echo</span> <span class="string">"</span></div><div class="line">time java -Xmx15g -jar <span class="variable">$gatk</span> -T ApplyRecalibration\</div><div class="line"> -R <span class="variable">$ref</span> \</div><div class="line"> -input <span class="variable">$rawvcf</span>\</div><div class="line"> --ts_filter_level 99.9\</div><div class="line"> -tranchesFile <span class="variable">$outdir</span>/<span class="variable">$outname</span>.snps.tranches\</div><div class="line"> -recalFile <span class="variable">$outdir</span>/<span class="variable">$outname</span>.snps.recal\</div><div class="line"> -mode SNP\</div><div class="line"> -o <span class="variable">$outdir</span>/<span class="variable">$outname</span>.snprecal.vcf \</div><div class="line"> &amp;&amp; echo \"ApplyRecalibration done\"</div><div class="line">" &gt;<span class="variable">$tag</span>.sh</div></pre></td></tr></table></figure>
+<p>Open the recalibrated file using <code>less –S</code> and check the <code>Filter</code> column, you should now see that all SNPs that were classified at 99.9 or better are all termed <code>PASS</code> and the rest are termed <code>LowQual</code>, <code>TruthSensitivityTranche99.90to100.00</code>. We can now get all the trusted SNPs by taking the ones with <code>PASS</code>.</p>
+<h3 id="Questions-3"><a href="#Questions-3" class="headerlink" title="Questions"></a>Questions</h3><h4 id="1-How-many-known-do-we-have-that-PASS-the-filtering"><a href="#1-How-many-known-do-we-have-that-PASS-the-filtering" class="headerlink" title="1. How many known  do we have that PASS the filtering?"></a>1. How many known  do we have that PASS the filtering?</h4><p>However keep in mind that the even at the 99.0% sensitivity tranche we expect quite a number of false positive calls (the orange and orange scribbled bars in the plot). Lets try to divide the calls into known and novel (based on dbSNP) and plot the quality distributions using R.</p>
+<pre><code class="bash">
+</code></pre>
+<h4 id="2-Based-on-this-would-you-trust-all-of-the-novel-SNPs"><a href="#2-Based-on-this-would-you-trust-all-of-the-novel-SNPs" class="headerlink" title="2. Based on this, would you trust all of the novel SNPs?"></a>2. Based on this, would you trust all of the novel SNPs?</h4>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DNA-variant-detection/" rel="tag"># DNA variant detection</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/20/hello-world.html" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Siyang Liu" />
+          <p class="site-author-name" itemprop="name">Siyang Liu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NA12878-and-the-pre-processing-of-the-data"><span class="nav-number">2.</span> <span class="nav-text">NA12878 and the pre-processing of the data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preparation"><span class="nav-number">3.</span> <span class="nav-text">Preparation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Some-prior-knowledge"><span class="nav-number">3.1.</span> <span class="nav-text">Some prior knowledge</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#View-the-analysis-ready-bam"><span class="nav-number">4.</span> <span class="nav-text">View the analysis ready bam</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions"><span class="nav-number">4.1.</span> <span class="nav-text">Questions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-coverage-depth-information-from-the-bam"><span class="nav-number">5.</span> <span class="nav-text">The coverage depth information from the bam</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions-1"><span class="nav-number">5.1.</span> <span class="nav-text">Questions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-What-is-the-approximate-average-coverage-depth-for-the-two-data-set-respectively"><span class="nav-number">5.1.1.</span> <span class="nav-text">1. What is the approximate average coverage depth for the two data set respectively?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-How-much-is-the-genome-excluding-N-covered-by-more-than-1-read-and-4-read"><span class="nav-number">5.1.2.</span> <span class="nav-text">2. How much is the genome (excluding N) covered by more than 1 read and 4 read.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Did-you-notice-the-parameters-q-and-–Q-in-the-samtools-depth-and-what-do-they-mean"><span class="nav-number">5.1.3.</span> <span class="nav-text">3. Did you notice the parameters -q and –Q in the samtools depth and what do they mean?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Calling-SNP-and-INDELs-using-the-GATK-haplotypecaller"><span class="nav-number">6.</span> <span class="nav-text">Calling SNP and INDELs using the GATK haplotypecaller</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Question"><span class="nav-number">6.1.</span> <span class="nav-text">Question:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-What-do-the-parameters-mean-in-the-above-command-line"><span class="nav-number">6.1.1.</span> <span class="nav-text">1. What do the parameters mean in the above command line?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Can-you-distinguish-the-structure-of-a-vcf-file"><span class="nav-number">6.1.2.</span> <span class="nav-text">2. Can you distinguish the structure of a vcf file?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-How-many-known-SNPs-and-INDELs-did-we-get-and-how-many-of-them-are-novel"><span class="nav-number">6.1.3.</span> <span class="nav-text">3. How many known SNPs and INDELs did we get and how many of them are novel?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Variant-Quality-Score-Recalibration-Soft-filtering"><span class="nav-number">7.</span> <span class="nav-text">Variant Quality Score Recalibration / Soft filtering</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions-2"><span class="nav-number">7.1.</span> <span class="nav-text">Questions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Did-you-see-some-errors-emitting-in-the-recalibration-process-Why-is-it"><span class="nav-number">7.1.1.</span> <span class="nav-text">1. Did you see some errors emitting in the recalibration process?  Why is it?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-less-–S-the-tranche-file-or-open-the-tranche-plot-by-rsync-the-file-to-your-local-disk-what-does-tranche-mean-Does-the-result-make-sense-to-you"><span class="nav-number">7.1.2.</span> <span class="nav-text">2. less –S the *tranche file (or open the tranche plot by rsync the file to your local disk), what does tranche mean? Does the result make sense to you?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-What-do-you-think-you-can-do-provided-such-a-result"><span class="nav-number">7.1.3.</span> <span class="nav-text">3. What do you think you can do provided such a result?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apply-recalibration-to-SNPs"><span class="nav-number">8.</span> <span class="nav-text">Apply recalibration to SNPs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Questions-3"><span class="nav-number">8.1.</span> <span class="nav-text">Questions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-How-many-known-do-we-have-that-PASS-the-filtering"><span class="nav-number">8.1.1.</span> <span class="nav-text">1. How many known  do we have that PASS the filtering?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Based-on-this-would-you-trust-all-of-the-novel-SNPs"><span class="nav-number">8.1.2.</span> <span class="nav-text">2. Based on this, would you trust all of the novel SNPs?</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Siyang Liu</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'cs-fungenomics-com';
+      var disqus_identifier = '2016/11/20/DNA-variant-discovery.html';
+
+      var disqus_title = "DNA variant discovery";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("xDpWlgzzsgIgBmltmMFNSuIU-gzGzoHsz", "VBqWso8j1nFtVpnSau4zJeNg");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+  
+
+
+</body>
+</html>
